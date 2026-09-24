@@ -1,0 +1,47 @@
+
+<h1 class="text-2xl font-bold mb-4">Assign Asset</h1>
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4 bg-white p-6 rounded-lg shadow max-w-lg">
+
+  <div>
+    <label class="block text-sm font-medium mb-1">Employee</label>
+    <select formControlName="employee" class="w-full border rounded px-3 py-2">
+      <option value="" disabled>Select employee</option>
+      <option *ngFor="let e of employees" [value]="e._id">{{ e.name }} — {{ e.department }}</option>
+    </select>
+  </div>
+
+  <div>
+    <label class="block text-sm font-medium mb-1">Condition Grade</label>
+    <select formControlName="conditionGradeAtAssignment" class="w-full border rounded px-3 py-2">
+      <option value="" disabled>Select grade</option>
+      <option *ngFor="let g of grades" [value]="g">{{ g }}</option>
+    </select>
+  </div>
+<div>
+  <label class="block text-sm font-medium mb-1">Condition Photos/Documents (optional)</label>
+  <input type="file" accept="image/jpeg,image/png,application/pdf" multiple
+    (change)="onFilesSelected($event)" class="w-full border rounded px-3 py-2" />
+
+  <div *ngIf="previews.length" class="flex flex-wrap gap-2 mt-2">
+    <div *ngFor="let p of previews" class="text-center">
+      <img *ngIf="!p.isPdf" [src]="p.url" class="h-20 w-20 object-cover rounded border" />
+      <div *ngIf="p.isPdf" class="h-20 w-20 flex items-center justify-center rounded border bg-slate-50 text-xs text-slate-500">
+        PDF
+      </div>
+      <p class="text-xs text-slate-500 mt-1 max-w-[80px] truncate">{{ p.name }}</p>
+    </div>
+  </div>
+</div>
+
+  <div>
+    <label class="block text-sm font-medium mb-1">Notes</label>
+    <textarea formControlName="notes" class="w-full border rounded px-3 py-2"></textarea>
+  </div>
+
+  <p *ngIf="errorMessage" class="text-red-600 text-sm">{{ errorMessage }}</p>
+
+  <button type="submit" class="bg-slate-800 text-white px-4 py-2 rounded hover:bg-slate-700">
+    Assign Asset
+  </button>
+</form>

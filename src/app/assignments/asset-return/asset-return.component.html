@@ -1,0 +1,56 @@
+
+<h1 class="text-2xl font-bold mb-4">Return Asset</h1>
+
+<p *ngIf="loading">Loading...</p>
+<div *ngIf="activeAssignment?.conditionPhotoAtAssignment" class="mb-4">
+  <p class="text-sm font-medium mb-1">Condition photo at assignment:</p>
+  <img [src]="assignmentService.getPhotoUrl(activeAssignment.conditionPhotoAtAssignment)"
+    class="h-40 rounded border object-cover" />
+</div>
+<div *ngIf="!loading && activeAssignment" class="mb-4 text-sm text-slate-600">
+  Currently assigned to <strong>{{ activeAssignment.employee?.name }}</strong>
+  ({{ activeAssignment.employee?.department }})
+</div>
+
+<form *ngIf="!loading" [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4 bg-white p-6 rounded-lg shadow max-w-lg">
+
+  <div>
+    <label class="block text-sm font-medium mb-1">Condition Grade at Return</label>
+    <select formControlName="conditionGradeAtReturn" class="w-full border rounded px-3 py-2">
+      <option value="" disabled>Select grade</option>
+      <option *ngFor="let g of grades" [value]="g">{{ g }}</option>
+    </select>
+  </div>
+
+  <div>
+    <label class="block text-sm font-medium mb-1">Resulting Asset Status</label>
+    <select formControlName="resultingStatus" class="w-full border rounded px-3 py-2">
+      <option *ngFor="let s of statuses" [value]="s">{{ s }}</option>
+    </select>
+  </div>
+
+  <div *ngIf="activeAssignment?.conditionPhotosAtAssignment?.length" class="mb-4">
+  <p class="text-sm font-medium mb-1">Condition photos/documents at assignment:</p>
+  <div class="flex flex-wrap gap-2">
+    <a *ngFor="let path of activeAssignment.conditionPhotosAtAssignment"
+      [href]="assignmentService.getPhotoUrl(path)" target="_blank">
+      <img *ngIf="!path.endsWith('.pdf')" [src]="assignmentService.getPhotoUrl(path)"
+        class="h-20 w-20 object-cover rounded border" />
+      <div *ngIf="path.endsWith('.pdf')" class="h-20 w-20 flex items-center justify-center rounded border bg-slate-50 text-xs text-slate-500">
+        PDF
+      </div>
+    </a>
+  </div>
+</div>
+  <div>
+    <label class="block text-sm font-medium mb-1">Notes</label>
+    <textarea formControlName="returnNotes" class="w-full border rounded px-3 py-2"></textarea>
+  </div>
+
+  <p *ngIf="errorMessage" class="text-red-600 text-sm">{{ errorMessage }}</p>
+
+  <button type="submit" [disabled]="submitting"
+    class="bg-slate-800 text-white px-4 py-2 rounded hover:bg-slate-700 disabled:opacity-50">
+    {{ submitting ? 'Saving...' : 'Confirm Return' }}
+  </button>
+</form>

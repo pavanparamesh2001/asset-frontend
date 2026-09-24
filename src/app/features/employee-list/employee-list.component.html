@@ -1,0 +1,35 @@
+<div class="flex justify-between items-center mb-4">
+  <h1 class="text-2xl font-bold">Employees</h1>
+  <a routerLink="/employees/register" class="bg-slate-800 text-white px-4 py-2 rounded hover:bg-slate-700">
+    Add Employee
+  </a>
+</div>
+
+<p *ngIf="errorMessage" class="text-red-600 text-sm mb-3">{{ errorMessage }}</p>
+<p *ngIf="loading">Loading...</p>
+
+<table *ngIf="!loading" class="w-full bg-white shadow rounded overflow-hidden">
+  <thead class="bg-slate-100 text-left text-sm">
+    <tr>
+      
+      <th class="p-3">Name</th>
+      <th class="p-3">Email</th>
+      <th class="p-3">Phone</th>
+      <th class="p-3">Department</th>
+      <th class="p-3">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let emp of employees" class="border-t text-sm">
+      
+      <td class="p-3">{{ emp.name }}</td>
+      <td class="p-3">{{ emp.email }}</td>
+      <td class="p-3">{{ emp.phone }}</td>
+      <td class="p-3">{{ emp.department }}</td>
+      <td class="p-3 space-x-3">
+        <a [routerLink]="['/employees', emp._id, 'edit']" class="text-blue-600 hover:underline">Edit</a>
+        <button (click)="deleteEmployee(emp._id!)" class="text-red-600 hover:underline">Delete</button>
+      </td>
+    </tr>
+  </tbody>
+</table>

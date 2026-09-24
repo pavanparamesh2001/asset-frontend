@@ -1,0 +1,22 @@
+<div class="min-h-screen bg-slate-50 flex items-center justify-center p-4">
+  <div class="bg-white rounded-lg shadow max-w-sm w-full p-6">
+    <p *ngIf="loading">Loading asset...</p>
+    <p *ngIf="notFound" class="text-red-600">Asset not found.</p>
+
+    <div *ngIf="asset">
+      <h1 class="text-xl font-bold mb-1">{{ asset.assetTag }}</h1>
+      <span class="inline-block text-xs px-2 py-1 rounded bg-amber-100 text-amber-800 mb-4">
+        {{ asset.status }}
+      </span>
+
+      <dl class="space-y-2 text-sm">
+        <div><dt class="text-slate-500">Category</dt><dd>{{ asset.category }}</dd></div>
+<div><dt class="text-slate-500">Brand / Model</dt><dd>{{ asset.brand }} {{ asset.deviceModel }}</dd></div>
+<div *ngIf="asset.assignedTo"><dt class="text-slate-500">Assigned To</dt><dd>{{ asset.assignedTo }}</dd></div>
+        <div><dt class="text-slate-500">Serial Number</dt><dd>{{ asset.serialNumber }}</dd></div>
+        <div><dt class="text-slate-500">Purchase Date</dt><dd>{{ asset.purchaseDate | date }}</dd></div>
+        <div><dt class="text-slate-500">Warranty End</dt><dd>{{ asset.warrantyEndDate | date }}</dd></div>
+      </dl>
+    </div>
+  </div>
+</div>

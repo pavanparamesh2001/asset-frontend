@@ -1,0 +1,127 @@
+<h1 class="text-2xl font-bold mb-4">All Assets</h1>
+
+<div *ngIf="summary" class="grid grid-cols-2 sm:grid-cols-5 gap-3 mb-6">
+  <div class="bg-white rounded-lg shadow p-4 border-l-4 border-slate-400">
+    <p class="text-2xl font-bold text-slate-800">{{ summary.total }}</p>
+    <p class="text-xs text-slate-500 mt-0.5">Total Assets</p>
+  </div>
+
+  <div class="bg-white rounded-lg shadow p-4 border-l-4 border-green-500">
+    <p class="text-2xl font-bold text-green-700">{{ summary.Available }}</p>
+    <p class="text-xs text-slate-500 mt-0.5">Available</p>
+  </div>
+
+  <div class="bg-white rounded-lg shadow p-4 border-l-4 border-amber-500">
+    <p class="text-2xl font-bold text-amber-700">{{ summary.Assigned }}</p>
+    <p class="text-xs text-slate-500 mt-0.5">Assigned</p>
+  </div>
+
+  <div class="bg-white rounded-lg shadow p-4 border-l-4 border-red-400">
+    <p class="text-2xl font-bold text-red-600">{{ summary['In Repair'] }}</p>
+    <p class="text-xs text-slate-500 mt-0.5">In Repair</p>
+  </div>
+
+  <div class="bg-white rounded-lg shadow p-4 border-l-4 border-slate-300">
+    <p class="text-2xl font-bold text-slate-500">{{ summary.Disposed + summary['Lost/Stolen'] }}</p>
+    <p class="text-xs text-slate-500 mt-0.5">Disposed / Lost</p>
+  </div>
+</div>
+
+<div class="flex flex-wrap gap-3 mb-4 items-end">
+  <div class="flex-1 min-w-[200px]">
+    <label class="block text-xs font-medium text-slate-500 mb-1">Search</label>
+    <input [(ngModel)]="searchText" placeholder="Tag, name, brand, model, serial..."
+      class="w-full border rounded px-3 py-2 text-sm" />
+  </div>
+
+  <div>
+    <label class="block text-xs font-medium text-slate-500 mb-1">Category</label>
+    <select [(ngModel)]="categoryFilter" class="border rounded px-3 py-2 text-sm">
+      <option value="">All Categories</option>
+      <option *ngFor="let c of categories" [value]="c">{{ c }}</option>
+    </select>
+  </div>
+
+  <div>
+    <label class="block text-xs font-medium text-slate-500 mb-1">Status</label>
+    <select [(ngModel)]="statusFilter" class="border rounded px-3 py-2 text-sm">
+      <option value="">All Statuses</option>
+      <option *ngFor="let s of statuses" [value]="s">{{ s }}</option>
+    </select>
+  </div>
+
+  <button *ngIf="searchText || categoryFilter || statusFilter" (click)="clearFilters()"
+    class="text-sm text-slate-500 hover:text-slate-700 px-3 py-2">
+    Clear filters
+  </button>
+</div>
+
+<p *ngIf="!loading" class="text-xs text-slate-500 mb-2">
+  Showing {{ filteredAssets.length }} of {{ assets.length }} assets
+</p>
+
+<p *ngIf="loading">Loading...</p>
+
+<table *ngIf="!loading" class="w-full bg-white shadow rounded">
+  <thead class="bg-slate-100 text-left text-sm">
+    <tr>
+      <th class="p-3">Tag</th>
+      <th class="p-3">Category</th>
+      <th class="p-3">Brand / Model</th>
+      <th class="p-3">Status</th>
+       <th class="p-3">Assigned To</th>
+      <th class="p-3">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+ <tr *ngFor="let asset of filteredAssets" class="border-t text-sm">
+  <td class="p-3 font-mono">{{ asset.assetTag }}</td>
+  <td class="p-3">{{ asset.category }}</td>
+  <td class="p-3">{{ asset.brand }} {{ asset.deviceModel }}</td>
+  <td class="p-3">
+    <span class="px-2 py-1 rounded text-xs"
+      [class.bg-green-100]="asset.status === 'Available'"
+      [class.text-green-800]="asset.status === 'Available'"
+      [class.bg-amber-100]="asset.status === 'Assigned'"
+      [class.text-amber-800]="asset.status === 'Assigned'">
+      {{ asset.status }}
+    </span>
+  </td>
+  <td class="p-3">{{ asset.assignedTo || '—' }}</td>
+  <td class="p-3 flex flex-wrap gap-1.5">
+  <a *ngIf="asset.status === 'Available'" [routerLink]="['/assets', asset._id, 'assign']"
+    class="text-xs px-2 py-1 rounded bg-blue-50 text-blue-700 hover:bg-blue-100">Assign</a>
+
+  <a *ngIf="asset.status === 'Assigned'" [routerLink]="['/assets', asset._id, 'return']"
+    class="text-xs px-2 py-1 rounded bg-amber-50 text-amber-700 hover:bg-amber-100">Return</a>
+
+  <a [href]="assetService.getQrCodeUrl(asset._id!)" target="_blank"
+    class="text-xs px-2 py-1 rounded bg-slate-100 text-slate-700 hover:bg-slate-200">QR</a>
+
+  <button (click)="assetService.printQrLabel(asset)"
+    class="text-xs px-2 py-1 rounded bg-slate-100 text-slate-700 hover:bg-slate-200">Print</button>
+
+  <a [routerLink]="['/assets', asset._id, 'photos']"
+    class="text-xs px-2 py-1 rounded bg-slate-100 text-slate-700 hover:bg-slate-200">Photos</a>
+
+<div *ngIf="asset.invoiceFiles?.length" class="relative">
+  <button (click)="toggleInvoiceMenu(asset._id!)"
+    class="text-xs px-2 py-1 rounded bg-slate-100 text-slate-700 hover:bg-slate-200">
+    Invoice{{ asset.invoiceFiles!.length > 1 ? ' (' + asset.invoiceFiles!.length + ')' : '' }}
+  </button>
+
+  <div *ngIf="openInvoiceMenuFor === asset._id"
+    class="absolute z-10 mt-1 bg-white border rounded shadow-lg py-1 min-w-[140px]">
+    <a *ngFor="let path of asset.invoiceFiles; let i = index"
+      [href]="assetService.getInvoiceUrl(path)" target="_blank"
+      class="block px-3 py-1.5 text-xs text-slate-700 hover:bg-slate-50">
+      File {{ i + 1 }}
+    </a>
+  </div>
+</div>
+    <a [routerLink]="['/assets', asset._id, 'edit']"
+  class="text-xs px-2 py-1 rounded bg-slate-100 text-slate-700 hover:bg-slate-200">Edit</a>
+</td>
+</tr>
+  </tbody>
+</table>

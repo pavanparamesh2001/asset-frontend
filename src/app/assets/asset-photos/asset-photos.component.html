@@ -1,0 +1,53 @@
+<h1 class="text-2xl font-bold mb-4">Condition Photos</h1>
+
+<p *ngIf="loading">Loading...</p>
+<p *ngIf="notFound || (!loading && !assignment)" class="text-slate-500">
+  No assignment history found for this asset.
+</p>
+
+<div *ngIf="!loading && assignment" class="space-y-6 max-w-2xl">
+  <div class="bg-white p-4 rounded-lg shadow text-sm">
+    <p><strong>Assigned to:</strong> {{ assignment.employee?.name }} ({{ assignment.employee?.department }})</p>
+    <p><strong>Assigned:</strong> {{ assignment.assignedDate | date }}</p>
+    <p *ngIf="assignment.returnDate"><strong>Returned:</strong> {{ assignment.returnDate | date }}</p>
+    <p *ngIf="!assignment.returnDate" class="text-amber-700">Still with employee — not yet returned.</p>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+    <div>
+  <h2 class="font-semibold mb-2">At Assignment (Grade {{ assignment.conditionGradeAtAssignment }})</h2>
+  <div *ngIf="assignment.conditionPhotosAtAssignment?.length" class="flex flex-wrap gap-2">
+    <a *ngFor="let path of assignment.conditionPhotosAtAssignment"
+      [href]="assignmentService.getPhotoUrl(path)" target="_blank">
+      <img *ngIf="!path.endsWith('.pdf')" [src]="assignmentService.getPhotoUrl(path)"
+        class="h-24 w-24 object-cover rounded border" />
+      <div *ngIf="path.endsWith('.pdf')" class="h-24 w-24 flex items-center justify-center rounded border bg-slate-50 text-xs text-slate-500">
+        PDF
+      </div>
+    </a>
+  </div>
+  <p *ngIf="!assignment.conditionPhotosAtAssignment?.length" class="text-slate-500 text-sm">No files uploaded.</p>
+</div>
+
+    <div>
+  <h2 class="font-semibold mb-2">
+    At Return <span *ngIf="assignment.conditionGradeAtReturn">(Grade {{ assignment.conditionGradeAtReturn }})</span>
+  </h2>
+  <div *ngIf="assignment.conditionPhotosAtReturn?.length" class="flex flex-wrap gap-2">
+    <a *ngFor="let path of assignment.conditionPhotosAtReturn"
+      [href]="assignmentService.getPhotoUrl(path)" target="_blank">
+      <img *ngIf="!path.endsWith('.pdf')" [src]="assignmentService.getPhotoUrl(path)"
+        class="h-24 w-24 object-cover rounded border" />
+      <div *ngIf="path.endsWith('.pdf')" class="h-24 w-24 flex items-center justify-center rounded border bg-slate-50 text-xs text-slate-500">
+        PDF
+      </div>
+    </a>
+  </div>
+  <p *ngIf="!assignment.returnDate" class="text-slate-500 text-sm">Not yet returned.</p>
+  <p *ngIf="assignment.returnDate && !assignment.conditionPhotosAtReturn?.length" class="text-slate-500 text-sm">
+    No files uploaded.
+  </p>
+</div>
+
+  <a routerLink="/assets" class="text-blue-600 hover:underline text-sm">← Back to Assets</a>
+</div>
