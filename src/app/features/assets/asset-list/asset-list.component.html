@@ -88,30 +88,32 @@
     </span>
   </td>
   <td class="p-3">{{ asset.assignedTo || '—' }}</td>
-  <td class="p-3 flex flex-wrap gap-1.5">
+  <td class="p-3">
+  <div class="flex flex-wrap gap-2 items-center">
+
   <a *ngIf="asset.status === 'Available'" [routerLink]="['/assets', asset._id, 'assign']"
-    class="text-xs px-2 py-1 rounded bg-blue-50 text-blue-700 hover:bg-blue-100">Assign</a>
+    class="text-xs font-medium px-2.5 py-1.5 rounded-md border border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100 hover:border-blue-300 transition-colors">Assign</a>
 
   <a *ngIf="asset.status === 'Assigned'" [routerLink]="['/assets', asset._id, 'return']"
-    class="text-xs px-2 py-1 rounded bg-amber-50 text-amber-700 hover:bg-amber-100">Return</a>
+    class="text-xs font-medium px-2.5 py-1.5 rounded-md border border-amber-200 bg-amber-50 text-amber-700 hover:bg-amber-100 hover:border-amber-300 transition-colors">Return</a>
 
   <a [href]="assetService.getQrCodeUrl(asset._id!)" target="_blank"
-    class="text-xs px-2 py-1 rounded bg-slate-100 text-slate-700 hover:bg-slate-200">QR</a>
+    class="text-xs font-medium px-2.5 py-1.5 rounded-md border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 hover:border-slate-400 transition-colors">QR</a>
 
   <button (click)="assetService.printQrLabel(asset)"
-    class="text-xs px-2 py-1 rounded bg-slate-100 text-slate-700 hover:bg-slate-200">Print</button>
+    class="text-xs font-medium px-2.5 py-1.5 rounded-md border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 hover:border-slate-400 transition-colors">Print</button>
 
   <a [routerLink]="['/assets', asset._id, 'photos']"
-    class="text-xs px-2 py-1 rounded bg-slate-100 text-slate-700 hover:bg-slate-200">Photos</a>
+    class="text-xs font-medium px-2.5 py-1.5 rounded-md border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 hover:border-slate-400 transition-colors">Photos</a>
 
 <div *ngIf="asset.invoiceFiles?.length" class="relative">
   <button (click)="toggleInvoiceMenu(asset._id!)"
-    class="text-xs px-2 py-1 rounded bg-slate-100 text-slate-700 hover:bg-slate-200">
+    class="text-xs font-medium px-2.5 py-1.5 rounded-md border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 hover:border-slate-400 transition-colors">
     Invoice{{ asset.invoiceFiles!.length > 1 ? ' (' + asset.invoiceFiles!.length + ')' : '' }}
   </button>
 
   <div *ngIf="openInvoiceMenuFor === asset._id"
-    class="absolute z-10 mt-1 bg-white border rounded shadow-lg py-1 min-w-[140px]">
+    class="absolute z-10 mt-1 bg-white border border-slate-200 rounded-md shadow-lg py-1 min-w-[140px]">
     <a *ngFor="let path of asset.invoiceFiles; let i = index"
       [href]="assetService.getInvoiceUrl(path)" target="_blank"
       class="block px-3 py-1.5 text-xs text-slate-700 hover:bg-slate-50">
@@ -119,8 +121,11 @@
     </a>
   </div>
 </div>
+
     <a [routerLink]="['/assets', asset._id, 'edit']"
-  class="text-xs px-2 py-1 rounded bg-slate-100 text-slate-700 hover:bg-slate-200">Edit</a>
+  class="text-xs font-medium px-2.5 py-1.5 rounded-md border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 hover:border-slate-400 transition-colors">Edit</a>
+
+  </div>
 </td>
 </tr>
   </tbody>

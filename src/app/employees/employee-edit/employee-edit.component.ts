@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { EmployeeService } from '../../services/employee.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-employee-edit',
@@ -22,7 +23,7 @@ export class EmployeeEditComponent implements OnInit {
   errorMessage = '';
 
   form = this.fb.group({
-   
+
     name: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]],
     phone: ['', Validators.required],
@@ -36,22 +37,48 @@ export class EmployeeEditComponent implements OnInit {
         this.form.patchValue(emp);
         this.loading = false;
       },
-      error: () => { this.loading = false; }
+      error: () => {
+        this.loading = false;
+        Swal.fire({
+          icon: 'error',
+          title: 'Failed to load',
+          text: 'Could not load this employee\'s details.'
+        });
+      }
     });
   }
 
   onSubmit() {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
+      Swal.fire({
+        icon: 'warning',
+        title: 'Incomplete form',
+        text: 'Please fill in all required fields before submitting.'
+      });
       return;
     }
 
     this.submitting = true;
     this.employeeService.updateEmployee(this.employeeId, this.form.value as any).subscribe({
-      next: () => this.router.navigate(['/employees']),
+      next: () => {
+        this.submitting = false;
+        Swal.fire({
+          icon: 'success',
+          title: 'Employee updated',
+          text: 'Changes have been saved successfully.',
+          timer: 1800,
+          showConfirmButton: false
+        }).then(() => this.router.navigate(['/employees']));
+      },
       error: (err) => {
         this.errorMessage = err.error?.message || 'Failed to update employee';
         this.submitting = false;
+        Swal.fire({
+          icon: 'error',
+          title: 'Update failed',
+          text: this.errorMessage
+        });
       }
     });
   }

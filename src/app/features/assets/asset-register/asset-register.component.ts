@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AssetService } from '../../../services/asset.service';
+import Swal from 'sweetalert2';
 
 
 @Component({
@@ -33,12 +34,12 @@ export class AssetRegisterComponent {
     deviceModel: ['', Validators.required],
     serialNumber: ['', Validators.required],
     purchaseDate: ['', Validators.required],
-    purchaseCost: [null as number | null],
-    warrantyEndDate: [''],
-    billStatus: ['NA'],
-    billNumber: [''],
-    department: [''],
-    notes: ['']
+    purchaseCost: [null as number | null, Validators.required],
+    warrantyEndDate: ['', Validators.required],
+    billStatus: ['NA', Validators.required],
+    billNumber: ['', Validators.required],
+    department: ['', Validators.required],
+    notes: ['', Validators.required]
   });
 
   onInvoicesSelected(event: Event) {
@@ -50,34 +51,66 @@ export class AssetRegisterComponent {
   onSubmit() {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
+      this.errorMessage = 'Please fill in all required fields.';
+      Swal.fire({
+        icon: 'warning',
+        title: 'Incomplete form',
+        text: 'Please fill in all required fields before submitting.'
+      });
+      return;
+    }
+
+    if (this.selectedInvoices.length === 0) {
+      this.errorMessage = 'At least one invoice file is required.';
+      Swal.fire({
+        icon: 'warning',
+        title: 'Invoice required',
+        text: 'Please attach at least one invoice file.'
+      });
       return;
     }
 
     this.submitting = true;
+    this.errorMessage = '';
 
     const registerAsset = (invoiceUrls?: string[]) => {
       this.assetService.createAsset({
         ...this.form.value,
         invoiceFiles: invoiceUrls
       } as any).subscribe({
-        next: () => this.router.navigate(['/assets']),
+        next: () => {
+          this.submitting = false;
+          Swal.fire({
+            icon: 'success',
+            title: 'Asset registered',
+            text: 'The asset has been registered successfully.',
+            timer: 1800,
+            showConfirmButton: false
+          }).then(() => this.router.navigate(['/assets']));
+        },
         error: (err) => {
           this.errorMessage = err.error?.message || 'Failed to register asset';
           this.submitting = false;
+          Swal.fire({
+            icon: 'error',
+            title: 'Registration failed',
+            text: this.errorMessage
+          });
         }
       });
     };
 
-    if (this.selectedInvoices.length > 0) {
-      this.assetService.uploadInvoices(this.selectedInvoices).subscribe({
-        next: (res) => registerAsset(res.invoiceUrls),
-        error: () => {
-          this.errorMessage = 'Failed to upload invoice(s)';
-          this.submitting = false;
-        }
-      });
-    } else {
-      registerAsset();
-    }
+    this.assetService.uploadInvoices(this.selectedInvoices).subscribe({
+      next: (res) => registerAsset(res.invoiceUrls),
+      error: () => {
+        this.errorMessage = 'Failed to upload invoice(s)';
+        this.submitting = false;
+        Swal.fire({
+          icon: 'error',
+          title: 'Upload failed',
+          text: this.errorMessage
+        });
+      }
+    });
   }
 }

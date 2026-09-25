@@ -5,12 +5,12 @@
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 
     <div>
-      <label class="block text-sm font-medium mb-1">Asset Name</label>
+      <label class="block text-sm font-medium mb-1">Asset Name *</label>
       <input formControlName="assetName" class="w-full border rounded px-3 py-2" placeholder="e.g. Laptop, Charger, Stool" />
     </div>
 
     <div>
-      <label class="block text-sm font-medium mb-1">Category</label>
+      <label class="block text-sm font-medium mb-1">Category *</label>
       <select formControlName="category" class="w-full border rounded px-3 py-2">
         <option value="" disabled>Select category</option>
         <option *ngFor="let c of categories" [value]="c">{{ c }}</option>
@@ -18,7 +18,7 @@
     </div>
 
     <div>
-      <label class="block text-sm font-medium mb-1">Asset Type</label>
+      <label class="block text-sm font-medium mb-1">Asset Type *</label>
       <select formControlName="assetType" class="w-full border rounded px-3 py-2">
         <option value="" disabled>Select type</option>
         <option *ngFor="let t of assetTypes" [value]="t">{{ t }}</option>
@@ -26,54 +26,54 @@
     </div>
 
     <div>
-      <label class="block text-sm font-medium mb-1">Brand</label>
+      <label class="block text-sm font-medium mb-1">Brand *</label>
       <input formControlName="brand" class="w-full border rounded px-3 py-2" placeholder="e.g. Dell" />
     </div>
 
     <div>
-      <label class="block text-sm font-medium mb-1">Model</label>
+      <label class="block text-sm font-medium mb-1">Model *</label>
       <input formControlName="deviceModel" class="w-full border rounded px-3 py-2" placeholder="e.g. Latitude 5540" />
     </div>
 
     <div>
-      <label class="block text-sm font-medium mb-1">Serial Number</label>
+      <label class="block text-sm font-medium mb-1">Serial Number *</label>
       <input formControlName="serialNumber" class="w-full border rounded px-3 py-2" />
     </div>
 
     <div>
-      <label class="block text-sm font-medium mb-1">Purchase Date</label>
+      <label class="block text-sm font-medium mb-1">Purchase Date *</label>
       <input type="date" formControlName="purchaseDate" class="w-full border rounded px-3 py-2" />
     </div>
 
     <div>
-      <label class="block text-sm font-medium mb-1">Purchase Cost</label>
+      <label class="block text-sm font-medium mb-1">Purchase Cost *</label>
       <input type="number" formControlName="purchaseCost" class="w-full border rounded px-3 py-2" />
     </div>
 
     <div>
-      <label class="block text-sm font-medium mb-1">Warranty End Date</label>
+      <label class="block text-sm font-medium mb-1">Warranty End Date *</label>
       <input type="date" formControlName="warrantyEndDate" class="w-full border rounded px-3 py-2" />
     </div>
 
     <div>
-      <label class="block text-sm font-medium mb-1">Bill Status</label>
+      <label class="block text-sm font-medium mb-1">Bill Status *</label>
       <select formControlName="billStatus" class="w-full border rounded px-3 py-2">
         <option *ngFor="let b of billStatuses" [value]="b">{{ b }}</option>
       </select>
     </div>
 
     <div>
-      <label class="block text-sm font-medium mb-1">Bill Number</label>
+      <label class="block text-sm font-medium mb-1">Bill Number *</label>
       <input formControlName="billNumber" class="w-full border rounded px-3 py-2" />
     </div>
 
     <div>
-      <label class="block text-sm font-medium mb-1">Department</label>
+      <label class="block text-sm font-medium mb-1">Department *</label>
       <input formControlName="department" class="w-full border rounded px-3 py-2" placeholder="e.g. Accounts, IT, HR" />
     </div>
 
     <div class="md:col-span-2">
-      <label class="block text-sm font-medium mb-1">Invoice(s) (PDF or image)</label>
+      <label class="block text-sm font-medium mb-1">Invoice(s) (PDF or image) *</label>
       <input type="file" accept="application/pdf,image/*" multiple (change)="onInvoicesSelected($event)"
         class="w-full border rounded px-3 py-2" />
       <ul *ngIf="invoiceFileNames.length" class="text-xs text-slate-500 mt-1 list-disc list-inside">
@@ -82,7 +82,7 @@
     </div>
 
     <div class="md:col-span-2">
-      <label class="block text-sm font-medium mb-1">Notes</label>
+      <label class="block text-sm font-medium mb-1">Notes *</label>
       <textarea formControlName="notes" class="w-full border rounded px-3 py-2" rows="3"></textarea>
     </div>
 

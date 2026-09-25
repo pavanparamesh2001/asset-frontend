@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { EmployeeService } from '../../../services/employee.service';
 import { AssignmentService } from '../../../services/assignment.service';
 import { Employee } from '../../../models/employee.model';
+import Swal from 'sweetalert2';
 
 
 @Component({
@@ -51,6 +52,11 @@ export class AssetAssignComponent implements OnInit {
   onSubmit() {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
+      Swal.fire({
+        icon: 'warning',
+        title: 'Incomplete form',
+        text: 'Please fill in all required fields before submitting.'
+      });
       return;
     }
 
@@ -64,10 +70,24 @@ export class AssetAssignComponent implements OnInit {
           conditionPhotosAtAssignment: photoUrls
         } as any)
         .subscribe({
-          next: () => this.router.navigate(['/assets']),
+          next: () => {
+            this.submitting = false;
+            Swal.fire({
+              icon: 'success',
+              title: 'Asset assigned',
+              text: 'The asset has been assigned successfully.',
+              timer: 1800,
+              showConfirmButton: false
+            }).then(() => this.router.navigate(['/assets']));
+          },
           error: (err) => {
             this.errorMessage = err.error?.message || 'Failed to assign asset';
             this.submitting = false;
+            Swal.fire({
+              icon: 'error',
+              title: 'Assignment failed',
+              text: this.errorMessage
+            });
           }
         });
     };
@@ -78,6 +98,11 @@ export class AssetAssignComponent implements OnInit {
         error: () => {
           this.errorMessage = 'Failed to upload files';
           this.submitting = false;
+          Swal.fire({
+            icon: 'error',
+            title: 'Upload failed',
+            text: this.errorMessage
+          });
         }
       });
     } else {
