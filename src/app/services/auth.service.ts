@@ -10,7 +10,7 @@ interface LoginResponse {
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private http = inject(HttpClient);
-  private baseUrl = `http://${window.location.hostname}:5000/api/auth`;
+ private baseUrl = 'https://asset-backend-3-sd2y.onrender.com/api/auth';
 
   login(username: string, password: string): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.baseUrl}/login`, { username, password }).pipe(

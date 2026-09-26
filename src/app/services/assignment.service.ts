@@ -7,7 +7,7 @@ import { Assignment } from '../models/assignment.model';
 @Injectable({ providedIn: 'root' })
 export class AssignmentService {
   private http = inject(HttpClient);
-  private baseUrl = `http://${window.location.hostname}:5000/api/assignments`;
+private baseUrl = 'https://asset-backend-3-sd2y.onrender.com/api/assignments';
 
   assignAsset(payload: Assignment): Observable<Assignment> {
     return this.http.post<Assignment>(this.baseUrl, payload);
@@ -28,7 +28,7 @@ export class AssignmentService {
   return this.http.post<{ photoUrls: string[] }>(`${this.baseUrl}/upload-photos`, formData);
 }
 getPhotoUrl(relativePath: string): string {
-  return `http://${window.location.hostname}:5000${relativePath}`;
+   return `https://asset-backend-3-sd2y.onrender.com${relativePath}`;
 }
   getActiveAssignmentForAsset(assetId: string): Observable<any> {
     return this.http.get(`${this.baseUrl}/asset/${assetId}/active`);

@@ -7,7 +7,7 @@ import { Asset } from '../models/asset.model';
 @Injectable({ providedIn: 'root' })
 export class AssetService {
   private http = inject(HttpClient);
-private baseUrl = `http://${window.location.hostname}:5000/api/assets`;
+private baseUrl = 'https://asset-backend-3-sd2y.onrender.com/api/assets';
 
   getAssets(): Observable<Asset[]> {
     return this.http.get<Asset[]>(this.baseUrl);
@@ -34,7 +34,7 @@ uploadInvoices(files: File[]): Observable<{ invoiceUrls: string[] }> {
 }
 
 getInvoiceUrl(relativePath: string): string {
-  return `http://${window.location.hostname}:5000${relativePath}`;
+  return `https://asset-backend-3-sd2y.onrender.com${relativePath}`;
 }
 updateAsset(id: string, asset: Partial<Asset>): Observable<Asset> {
   return this.http.put<Asset>(`${this.baseUrl}/${id}`, asset);

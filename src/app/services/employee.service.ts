@@ -6,7 +6,7 @@ import { Employee } from '../models/employee.model';
 @Injectable({ providedIn: 'root' })
 export class EmployeeService {
   private http = inject(HttpClient);
-  private baseUrl = `http://${window.location.hostname}:5000/api/employees`;
+private baseUrl = 'https://asset-backend-3-sd2y.onrender.com/api/employees';
 
   getEmployees(): Observable<Employee[]> {
     return this.http.get<Employee[]>(this.baseUrl);
